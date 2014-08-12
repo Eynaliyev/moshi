@@ -158,9 +158,6 @@ public class JsonWriter implements Closeable, Flushable {
 
   private int[] stack = new int[32];
   private int stackSize = 0;
-  {
-    push(EMPTY_DOCUMENT);
-  }
 
   /**
    * A string containing a full set of spaces for a single level of
@@ -187,6 +184,8 @@ public class JsonWriter implements Closeable, Flushable {
       throw new NullPointerException("sink == null");
     }
     this.sink = sink;
+
+    push(EMPTY_DOCUMENT);
   }
 
   /**
