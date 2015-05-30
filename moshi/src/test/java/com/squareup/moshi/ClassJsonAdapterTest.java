@@ -25,7 +25,6 @@ import okio.Buffer;
 import org.junit.Test;
 
 import static com.squareup.moshi.TestUtil.newReader;
-import static com.squareup.moshi.Util.NO_ANNOTATIONS;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.fail;
 
@@ -157,7 +156,7 @@ public final class ClassJsonAdapterTest {
 
   @Test public void fieldNameCollision() throws Exception {
     try {
-      ClassJsonAdapter.FACTORY.create(ExtendsBaseA.class, NO_ANNOTATIONS, moshi);
+      ClassJsonAdapter.FACTORY.create(ExtendsBaseA.class, Util.NO_ANNOTATIONS, moshi);
       fail();
     } catch (IllegalArgumentException expected) {
       assertThat(expected).hasMessage("field name collision: 'a' declared by both "
@@ -303,7 +302,7 @@ public final class ClassJsonAdapterTest {
 
   @Test public void nonStaticNestedClassNotSupported() throws Exception {
     try {
-      ClassJsonAdapter.FACTORY.create(NonStatic.class, NO_ANNOTATIONS, moshi);
+      ClassJsonAdapter.FACTORY.create(NonStatic.class, Util.NO_ANNOTATIONS, moshi);
       fail();
     } catch (IllegalArgumentException expected) {
       assertThat(expected).hasMessage("cannot serialize non-static nested class "
@@ -312,8 +311,8 @@ public final class ClassJsonAdapterTest {
   }
 
   @Test public void platformClassNotSupported() throws Exception {
-    assertThat(ClassJsonAdapter.FACTORY.create(UUID.class, NO_ANNOTATIONS, moshi)).isNull();
-    assertThat(ClassJsonAdapter.FACTORY.create(KeyGenerator.class, NO_ANNOTATIONS, moshi)).isNull();
+    assertThat(ClassJsonAdapter.FACTORY.create(UUID.class, Util.NO_ANNOTATIONS, moshi)).isNull();
+    assertThat(ClassJsonAdapter.FACTORY.create(KeyGenerator.class, Util.NO_ANNOTATIONS, moshi)).isNull();
   }
 
   @Test public void anonymousClassNotSupported() throws Exception {
@@ -323,7 +322,7 @@ public final class ClassJsonAdapterTest {
       }
     };
     try {
-      ClassJsonAdapter.FACTORY.create(c.getClass(), NO_ANNOTATIONS, moshi);
+      ClassJsonAdapter.FACTORY.create(c.getClass(), Util.NO_ANNOTATIONS, moshi);
       fail();
     } catch (IllegalArgumentException expected) {
       assertThat(expected).hasMessage("cannot serialize anonymous class " + c.getClass().getName());
@@ -331,7 +330,7 @@ public final class ClassJsonAdapterTest {
   }
 
   @Test public void interfaceNotSupported() throws Exception {
-    assertThat(ClassJsonAdapter.FACTORY.create(Runnable.class, NO_ANNOTATIONS, moshi)).isNull();
+    assertThat(ClassJsonAdapter.FACTORY.create(Runnable.class, Util.NO_ANNOTATIONS, moshi)).isNull();
   }
 
   static abstract class Abstract {
@@ -339,7 +338,7 @@ public final class ClassJsonAdapterTest {
 
   @Test public void abstractClassNotSupported() throws Exception {
     try {
-      ClassJsonAdapter.FACTORY.create(Abstract.class, NO_ANNOTATIONS, moshi);
+      ClassJsonAdapter.FACTORY.create(Abstract.class, Util.NO_ANNOTATIONS, moshi);
       fail();
     } catch (IllegalArgumentException expected) {
       assertThat(expected).hasMessage("cannot serialize abstract class "
@@ -392,7 +391,7 @@ public final class ClassJsonAdapterTest {
   private <T> String toJson(Class<T> type, T value) throws IOException {
     @SuppressWarnings("unchecked") // Factory.create returns an adapter that matches its argument.
     JsonAdapter<T> jsonAdapter = (JsonAdapter<T>) ClassJsonAdapter.FACTORY.create(
-        type, NO_ANNOTATIONS, moshi);
+        type, Util.NO_ANNOTATIONS, moshi);
 
     // Wrap in an array to avoid top-level object warnings without going completely lenient.
     Buffer buffer = new Buffer();
@@ -410,7 +409,7 @@ public final class ClassJsonAdapterTest {
   private <T> T fromJson(Class<T> type, String json) throws IOException {
     @SuppressWarnings("unchecked") // Factory.create returns an adapter that matches its argument.
     JsonAdapter<T> jsonAdapter = (JsonAdapter<T>) ClassJsonAdapter.FACTORY.create(
-        type, NO_ANNOTATIONS, moshi);
+        type, Util.NO_ANNOTATIONS, moshi);
     // Wrap in an array to avoid top-level object warnings without going completely lenient.
     JsonReader jsonReader = newReader("[" + json + "]");
     jsonReader.beginArray();
